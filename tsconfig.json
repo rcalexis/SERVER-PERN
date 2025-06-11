@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "ES2020", // Establece la versión de JavaScript 
+        "module": "ESNext", // permite usar la sintaxis moderna de JavaScript import y export como en los navegadores o Node moderno.
+        "moduleResolution": "node", // le dice a typescript como debe de buscar los archivos que importamos, y usa el mismo modulo de resolucion de modulos que node por ejemplo buscando index.ts , index.js
+        "outDir": "./dist", // Carpeta donde se guardan los archivos .js compilados.
+        "rootDir": "./src", // Carpeta raíz de los archivos fuente TypeScript. Ayuda a mantener la estructura al compilar.
+        "strict": true, // Activa todas las comprobaciones estrictas de TypeScript como no permitir valores undefined o null sin validacion
+        "esModuleInterop": true, // Permite la compatibilidad con módulos CommonJS por ejemplo permite import express from express
+        "declaration": true, // Genera archivos .d.ts (declaraciones de tipo) junto con los .js útiles para crear paquetes reutilizables.
+        "paths": {
+            "*": ["./src/*"] //para importar desde rutas absolutas en lugar de relativas (por ejemplo: `import x from 'utils/archivo'` en lugar de `../../utils/archivo`).
+        }
+    },
+
+    "include": ["src/**/*"], // Especifica los archivos y carpetas a incluir en la compilacion todos los .ts dentro de src.
+    "exclude": ["node_modules"] // Carpeta que será ignorada por el compilador
+}
