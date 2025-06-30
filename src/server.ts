@@ -1,14 +1,37 @@
-import router from "./router.js";
+import router from "./router";
 import express from 'express';
+import db from "./config/db";
+import  colors  from "colors";
 
-const server = express();
 
 
+async function connectionDB() {
+
+    try {
+
+        await db.authenticate()
+        db.sync()
+        console.log(colors.rainbow("conexion exitosa"));
+        
+    } catch (error) {
+        // console.log(error);
+        console.log(colors.white.bgRed.bold("hubo un error"));
+        
+    }
+    
+}
+
+
+connectionDB()
+
+//instancia del servidor 
+const server = express()
+
+//Leer datos de formularios 
+server.use(express.json())
 
 server.use('/',router);
 
-// server.listen(4000, () => {
-//     console.log('Servidor escuchando en http://localhost:3000');
-// });
-
 export default server
+
+

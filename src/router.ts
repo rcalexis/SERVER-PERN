@@ -1,21 +1,32 @@
 
 import  { Router }  from "express";
+import { createProduct, updateProduct, getProducts } from './handlers/product';
+import { handleInputErrors } from "./middleware";
+import { Validate } from "sequelize-typescript";
+import { post } from "./middleware/posts";
+import { put } from "./middleware/put";
+
 
 const router = Router()
 
-router.get('/',(req, res)=>{
+
+
+
+router.get('/',getProducts,handleInputErrors,(req, res)=>{
     res.send("hola ya casi pasas el parcial")
 })
 
-router.post('/',(req, res)=>{
-    res.send("hola desde post")
-})
+//create 
+router.post('/',post,handleInputErrors, createProduct);
 
-router.put('/',(req, res)=>{
+
+
+router.put('/',put,updateProduct,handleInputErrors,(req, res)=>{
     res.send("hola desde put")
 })
 
-router.delete('/',(req, res)=>{
+
+router.delete('/',handleInputErrors,(req, res)=>{
     res.send("hola desde delete")
 })
 export default router
