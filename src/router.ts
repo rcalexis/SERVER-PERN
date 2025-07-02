@@ -1,11 +1,12 @@
 
 import { Router } from "express";
-import {createProduct,updateProduct,getProducts,getProductId, updateAvailability,} from "./handlers/product";
+import {createProduct,updateProduct,getProducts,getProductId, updateAvailability, deleteProduct,} from "./handlers/product";
 import { handleInputErrors } from "./middleware";
 import { Validate } from "sequelize-typescript";
 import { post } from "./middleware/posts";
 import { put } from "./middleware/put";
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
+import { createUser, getUsers, permDeleteUser, updateUser } from "./handlers/user";
 
 const router = Router();
 
@@ -20,8 +21,7 @@ router.get(
   getProductId
 );
 
-//create
-// router.post('/',post,handleInputErrors, createProduct);
+
 router.post(
   "/",
   body("name").notEmpty().withMessage("tonto te falto el nombre"),
@@ -59,8 +59,48 @@ router.patch(
 );
 
 
-router.delete("/", handleInputErrors, (req, res) => {
+router.delete("/:id", handleInputErrors, deleteProduct, (req, res) => {
   res.send("hola desde delete");
 });
+
+
+
+//usuarios
+router.post(
+  "/users",
+  body("username").notEmpty().withMessage("tonto te falto el nombre"),
+  body("email").isEmail().withMessage("ingresa un correo valido"),
+  body("password").notEmpty().withMessage("tonto te falto la cotraseña"),
+  body("role").optional().isIn(["user", "admin"]),
+  handleInputErrors,
+  createUser
+);
+
+router.get(
+  "/users",
+  handleInputErrors,
+  getUsers
+);
+
+router.put(
+  "/users/:id",
+  param("id").isInt(),
+  body("username").optional().isString(),
+  body("email").optional().isEmail(),
+  body("role").optional().isIn(["user", "admin"]),
+  body("isActive").optional().isBoolean(),
+  handleInputErrors,
+  updateUser
+);
+
+
+router.delete(
+  "/users/:id",
+  param("id").isInt(),
+  handleInputErrors,
+  permDeleteUser
+);
+
+
 export default router;
 

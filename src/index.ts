@@ -1,8 +1,3 @@
-// import { sumar } from "./funciones.js";
-// console.log("hola van a reprobar ");
-// sumar();
-
-
 
 import server from "./server";
 
