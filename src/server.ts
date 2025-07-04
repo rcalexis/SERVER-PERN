@@ -30,7 +30,7 @@ const server = express()
 //Leer datos de formularios 
 server.use(express.json())
 
-server.use('/',router);
+server.use('/api',router);
 
 export default server
 

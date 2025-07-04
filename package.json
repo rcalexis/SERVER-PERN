@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon --exec npx ts-node src/index.ts",
     "serve": "nodemon --watch 'src/**/*.ts' --exec node --loader ts-node/esm --no-warnings src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest --detectOpenHandles"
   },
   "author": "Alexis Rodriguez",
   "license": "ISC",
@@ -25,5 +26,12 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
     "sequelize-typescript": "^2.1.6"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/supertest": "^6.0.3",
+    "jest": "^30.0.3",
+    "supertest": "^7.1.1",
+    "ts-jest": "^29.4.0"
   }
 }
