@@ -7,7 +7,9 @@
     "dev": "nodemon --exec npx ts-node src/index.ts",
     "serve": "nodemon --watch 'src/**/*.ts' --exec node --loader ts-node/esm --no-warnings src/index.ts",
     "build": "tsc",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles",
+    "test:coverage" : "npm run pretest && jest --detectOpenHandles --coverage",
+    "pretest" : "ts-node ./src/data --clear"
   },
   "author": "Alexis Rodriguez",
   "license": "ISC",
