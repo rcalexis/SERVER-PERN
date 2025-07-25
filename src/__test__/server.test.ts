@@ -15,7 +15,7 @@ describe('mi primer prueba de ts',()=>{
 describe('Get / api', () => {
     it('should send back a json response', async () => {
         const res = await request(server).get('/api')
-        console.log(res);
+        // console.log(res);
         expect(res.status).toBe(200)
         expect(res.header['content-type']).toMatch(/json/)
 
