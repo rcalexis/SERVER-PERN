@@ -5,7 +5,7 @@ import  colors  from "colors";
 
 
 
-async function connectionDB() {
+export async function connectionDB() {
 
     try {
 

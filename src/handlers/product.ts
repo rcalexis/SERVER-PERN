@@ -7,9 +7,9 @@ import Product from "../models/Producto.mo";
 export const createProduct = async (req: Request, res: Response) => {
   try {
     const product = await Product.create(req.body);
-    res.status(201).json({ data: product });
+    res.status(200).json({ data: product });
   } catch (error) {
-    // console.log(error);
+    console.log("usuario no creado");
   }
 };
 

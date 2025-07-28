@@ -40,7 +40,7 @@ describe('POST /api/products', () => {
       price: 400,
       availibility: true,
     });
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(200);
     expect(res.body.data).toBeDefined();
     expect(res.body.data.name).toBe('iphone');
   });
