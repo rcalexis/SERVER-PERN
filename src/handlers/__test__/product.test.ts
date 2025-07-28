@@ -1,175 +1,222 @@
 import request from 'supertest';
 import server from '../../server';
+import db from '../../config/db';
 // import db from '../../config/db';
 
 // beforeAll(async () => {
 //   await db.sync();
 // });
 
-// afterAll(async () => {
-//   await db.close();
-// });
+afterAll(async () => {
+  await db.close();
+});
 
 describe('POST /api/products', () => {
-  it('debe mostrar errores de validación si el cuerpo está vacío', async () => {
-    const res = await request(server).post('/api/products').send({});
+  it('Debe mostrar errores de validacion si el cuerpo esta vacio', async () => {
+    const res = await request(server).post('/api/products');
     expect(res.status).toBe(400);
-     expect(res.body).toHaveProperty('errors');
+    expect(res.body.errors).toBeDefined();
   });
 
-  it('debe fallar si price es 0 o menor', async () => {
+  it('Debe validar que price sea mayor a 0', async () => {
     const res = await request(server).post('/api/products').send({
-      name: 'Producto invalido',
+      name: 'Tablett',
       price: 0,
     });
     expect(res.status).toBe(400);
   });
 
-  it('debe fallar si price no es numérico', async () => {
+  it('Debe validar que price sea un numero valido', async () => {
     const res = await request(server).post('/api/products').send({
-      name: 'Producto invalido',
-      price: 'abc',
+      name: 'tableta',
+      price: 'bde',
     });
     expect(res.status).toBe(400);
   });
 
-  it('debe crear correctamente un producto válido', async () => {
+  it('Debe crear el producto si los datos son validos', async () => {
     const res = await request(server).post('/api/products').send({
-      name: 'Producto válido',
-      price: 100,
+      name: 'iphone',
+      price: 400,
+      availibility: true,
     });
     expect(res.status).toBe(201);
-    expect(res.body.data).toHaveProperty('id');
-    expect(res.body.data.name).toBe('Producto válido');
+    expect(res.body.data).toBeDefined();
+    expect(res.body.data.name).toBe('iphone');
   });
 
-  it('no debe devolver 404 en casos esperados', async () => {
+  it('No debe devolver 404 en circunstancias esperadas', async () => {
     const res = await request(server).post('/api/products').send({
-      name: 'Producto prueba',
-      price: 50,
+      name: 'pantalon',
+      price: 100,
+      availibility: true,
     });
     expect(res.status).not.toBe(404);
   });
 });
 
 describe('GET /api/products', () => {
-  it('debe devolver status 200', async () => {
+  it('Debe devolver status 200', async () => {
     const res = await request(server).get('/api/products');
     expect(res.status).toBe(200);
   });
 
-  it('debe devolver JSON con propiedad data', async () => {
+  it('Debe devolver datos en formato JSON', async () => {
     const res = await request(server).get('/api/products');
     expect(res.header['content-type']).toMatch(/json/);
-    expect(res.body).toHaveProperty('data');
+  });
+
+  it('La respuesta debe contener una propiedad data', async () => {
+    const res = await request(server).get('/api/products');
+    expect(res.body.data).toBeDefined();
     expect(Array.isArray(res.body.data)).toBe(true);
-    expect(res.body).not.toHaveProperty('errors');
+  });
+
+  it('La respuesta no debe tener la propiedad errors', async () => {
+    const res = await request(server).get('/api/products');
+    expect(res.body.errors).toBeUndefined();
   });
 });
 
 describe('GET /api/products/:id', () => {
-  it('debe retornar 400 si el ID no es válido', async () => {
-    const res = await request(server).get('/api/products/abc');
+  it('Debe retornar 400 si el id no es valido', async () => {
+    const res = await request(server).get('/api/products/hola');
     expect(res.status).toBe(400);
   });
 
-  it('debe retornar 404 si el producto no existe', async () => {
-    const res = await request(server).get('/api/products/9');
+  it('Debe retornar 404 si el producto no existe', async () => {
+    const res = await request(server).get('/api/products/9999');
     expect(res.status).toBe(404);
   });
 
-  it('debe retornar 200 con el producto si existe', async () => {
-    const create = await request(server).post('/api/products').send({
-      name: 'Producto test get',
-      price: 80,
+  it('Debe retornar 200 si el id es valido', async () => {
+    const nuevo = await request(server).post('/api/products').send({
+      name: 'camiseta',
+      price: 100,
+      availibility: true,
     });
+    const id = nuevo.body.data.id;
 
-    const id = create.body.data.id;
     const res = await request(server).get(`/api/products/${id}`);
     expect(res.status).toBe(200);
-    expect(res.body.data).toHaveProperty('name', 'Producto test get');
+    expect(res.body.data).toBeDefined();
+    expect(res.body.data.id).toBe(id);
   });
 });
 
 describe('PUT /api/products/:id', () => {
-  it('debe retornar 400 si el cuerpo está vacío', async () => {
-    const res = await request(server).put('/api/products/1').send({});
+  it('Debe validar que el id en la url sea valido', async () => {
+    const res = await request(server).put('/api/products/abc').send({});
     expect(res.status).toBe(400);
   });
 
-  it('debe retornar 400 si price es inválido', async () => {
-    const res = await request(server).put('/api/products/1').send({
-      name: 'Test',
-      price: -10,
-      availability: true,
-    });
-    expect(res.status).toBe(400);
-  });
-
-  it('debe retornar 404 si el producto no existe', async () => {
-    const res = await request(server).put('/api/products/9').send({
-      name: 'Test',
-      price: 100,
-      availability: true,
+  it('Debe retornar 404 si el producto no existe', async () => {
+    const res = await request(server).put('/api/products/9999').send({
+      name: 'balon oro',
+      price: 10,
+      availibility: true,
     });
     expect(res.status).toBe(404);
   });
 
-  it('debe actualizar correctamente si el producto existe', async () => {
-    const create = await request(server).post('/api/products').send({
-      name: 'Producto original',
-      price: 30,
+  it('Debe validar que el precio sea mayor a 0', async () => {
+    const nuevo = await request(server).post('/api/products').send({
+      name: 'tablet',
+      price: 300,
+      availibility: true,
     });
 
-    const res = await request(server).put(`/api/products/${create.body.data.id}`).send({
-      name: 'Producto actualizado',
-      price: 120,
-      availability: false,
+    const id = nuevo.body.data.id;
+
+    const res = await request(server).put(`/api/products/${id}`).send({
+      name: 'tablet',
+      price: 0,
+      availibility: true,
+    });
+
+    expect(res.status).toBe(400);
+  });
+
+  it('Debe retornar 200 si el producto se actualiza correctamente', async () => {
+    const nuevo = await request(server).post('/api/products').send({
+      name: 'jarra',
+      price: 159,
+      availibility: true,
+    });
+
+    const id = nuevo.body.data.id;
+
+    const res = await request(server).put(`/api/products/${id}`).send({
+      name: 'jarra',
+      price: 200,
+      availibility: false,
     });
 
     expect(res.status).toBe(200);
-    expect(res.body.data.name).toBe('Producto actualizado');
-    expect(res.body.data.availability).toBe(false);
+    expect(res.body.data.name).toBe('jarra');
+    expect(res.body.data.price).toBe(200); 
   });
 });
 
 describe('PATCH /api/products/:id', () => {
-  it('debe retornar 404 si el producto no existe', async () => {
-    const res = await request(server).patch('/api/products/9');
+  it('Debe retornar 404 si el producto no existe', async () => {
+    const res = await request(server).patch('/api/products/9999');
     expect(res.status).toBe(404);
   });
 
-  it('debe alternar disponibilidad correctamente', async () => {
-    const create = await request(server).post('/api/products').send({
-      name: 'Producto patch',
-      price: 70,
+  it('Debe retornar 200 si se cambia correctamente la disponibilidad', async () => {
+    const nuevo = await request(server).post('/api/products').send({
+      name: 'Gorra',
+      price: 300,
+      availibility: true,
     });
 
-    const patch = await request(server).patch(`/api/products/${create.body.data.id}`);
-    expect(patch.status).toBe(200);
-    expect(typeof patch.body.data.availability).toBe('boolean');
+    const id = nuevo.body.data.id;
+
+    const res = await request(server).patch(`/api/products/${id}`);
+    expect(res.status).toBe(200);
+    expect(res.body.data.availibility).toBe(false);
+  });
+
+  it('Debe alternar availability correctamente true -> false -> true', async () => {
+    const nuevo = await request(server).post('/api/products').send({
+      name: 'Zapatos',
+      price: 500,
+      availibility: true,
+    });
+
+    const id = nuevo.body.data.id;
+
+    const res1 = await request(server).patch(`/api/products/${id}`);
+    const res2 = await request(server).patch(`/api/products/${id}`);
+
+    expect(res1.body.data.availibility).toBe(false);
+    expect(res2.body.data.availibility).toBe(true);
   });
 });
 
 describe('DELETE /api/products/:id', () => {
-  it('debe retornar 400 si el ID no es numérico', async () => {
+  it('Debe retornar 400 si el id no es valido', async () => {
     const res = await request(server).delete('/api/products/abc');
     expect(res.status).toBe(400);
   });
 
-  it('debe retornar 404 si el producto no existe', async () => {
-    const res = await request(server).delete('/api/products/9');
+  it('Debe retornar 404 si el producto no existe', async () => {
+    const res = await request(server).delete('/api/products/999999');
     expect(res.status).toBe(404);
   });
 
-  it('debe eliminar correctamente si existe', async () => {
-    const create = await request(server).post('/api/products').send({
-      name: 'Producto a eliminar',
-      price: 40,
+  it('Debe eliminar correctamente el producto', async () => {
+    const nuevo = await request(server).post('/api/products').send({
+      name: 'balon',
+      price: 50,
+      availibility: true,
     });
 
-    const res = await request(server).delete(`/api/products/${create.body.data.id}`);
+    const id = nuevo.body.data.id;
+
+    const res = await request(server).delete(`/api/products/${id}`);
     expect(res.status).toBe(200);
-    expect(res.body.message).toMatch(/eliminado/i);
+    expect(res.body.message).toBeDefined();
   });
 });

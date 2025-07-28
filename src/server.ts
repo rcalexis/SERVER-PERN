@@ -15,7 +15,7 @@ async function connectionDB() {
         
     } catch (error) {
         // console.log(error);
-        console.log(colors.white.bgRed.bold("hubo un error"));
+        // console.log(colors.white.bgRed.bold("hubo un error"));
         
     }
     
@@ -30,7 +30,7 @@ const server = express()
 //Leer datos de formularios 
 server.use(express.json())
 
-server.use('/api',router);
+server.use('/api/products',router);
 
 export default server
 

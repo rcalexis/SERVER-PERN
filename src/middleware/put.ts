@@ -1,4 +1,5 @@
-import { body } from "express-validator";
+// middleware/post.ts
+import { body, param } from "express-validator";
 
 export const put = [
   body("name")
@@ -12,4 +13,8 @@ export const put = [
     .withMessage("El dato no es numérico")
     .custom((value) => value > 0)
     .withMessage("El precio debe ser mayor a 0"),
+
+  param("id")
+    .isNumeric()
+    .withMessage("El id debe ser numerico")
 ];

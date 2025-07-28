@@ -9,58 +9,91 @@ import {
 } from "./handlers/product";
 import { handleInputErrors } from "./middleware";
 import { body, param } from "express-validator";
+import { methods } from "./middleware/methods";
+import { eliminar } from "./middleware/delete";
+
 
 const router = Router();
 
-
-router.get("/", handleInputErrors, getProducts);
-
+router.use(methods);
 
 router.get(
-  "/:id",
-  param("id").isNumeric().withMessage("id no es numerico"),
+  '/',
+  getProducts
+);
+
+router.get(
+  '/:id',
+  param('id')
+    .isNumeric()
+    .withMessage('El id debe ser numerico'),
   handleInputErrors,
   getProductId
 );
 
-
 router.post(
-  "/",
-  body("name").notEmpty().withMessage("tonto te falto el nombre"),
-  body("price")
-    .notEmpty().withMessage("tonto te falto el precio")
-    .isNumeric().withMessage("el dato no es numerico")
-    .custom((value) => value > 0).withMessage("el numero tiene que ser mayor a 0"),
+  '/',
+  body('name')
+    .notEmpty()
+    .withMessage('El nombre es un campo requerido'),
+
+  body('price')
+    .notEmpty()
+    .withMessage('El precio es un campo requerido')
+    .isNumeric()
+    .withMessage('El dato no es numerico')
+    .toFloat()
+    .custom((value) => value > 0)
+    .withMessage('El precio debe ser mayor a 0'),
+
   handleInputErrors,
   createProduct
 );
-
-
 router.put(
-  "/:id",
-  param("id").isNumeric().withMessage("id no es numerico"),
-  body("name").notEmpty().withMessage("tonto te falto el nombre"),
-  body("price")
-    .notEmpty().withMessage("tonto te falto el precio")
-    .isNumeric().withMessage("el dato no es numerico")
-    .custom((value) => value > 0).withMessage("Valor no valido"),
+  '/:id',
+  param('id')
+    .isNumeric()
+    .withMessage('El id debe ser numerico'),
+
+  body('name')
+    .notEmpty()
+    .withMessage('El nombre es un campo requerido'),
+
+  body('price')
+    .notEmpty()
+    .withMessage('El precio es un campo requerido')
+    .isNumeric()
+    .withMessage('El dato no es numerico')
+    .toFloat()
+    .custom((value) => value > 0)
+    .withMessage('El precio debe ser mayor a 0'),
+
+  body('availibility')
+    .isBoolean()
+    .withMessage('La disponibilidad debe ser booleana'),
+
   handleInputErrors,
   updateProduct
 );
 
-
 router.patch(
-  "/:id",
-  param("id").isInt().withMessage("id no valido"),
+  '/:id',
+  param('id')
+    .isNumeric()
+    .withMessage('El id debe ser numerico'),
+
   handleInputErrors,
   updateAvailability
 );
 
-
 router.delete(
-  "/:id",
-  param("id").isInt().withMessage("id no es numerico"),
+  '/:id',
+  param('id')
+    .isNumeric()
+    .withMessage('El id debe ser numérico'),
+
   handleInputErrors,
+  eliminar,
   deleteProduct
 );
 

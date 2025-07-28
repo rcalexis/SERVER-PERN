@@ -1,6 +1,7 @@
-import { body } from "express-validator";
+import {param } from "express-validator";
 
-export const eliminar =[
-    
-
-]
+export const eliminar = [
+  param("id")
+    .isNumeric()
+    .withMessage("El id debe ser numerico")
+];

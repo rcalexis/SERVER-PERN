@@ -4,6 +4,7 @@
   "description": "Este es un proyecto para entender el mandejo de mern stack",
   "main": "index.js",
   "scripts": {
+    
     "dev": "nodemon --exec npx ts-node src/index.ts",
     "serve": "nodemon --watch 'src/**/*.ts' --exec node --loader ts-node/esm --no-warnings src/index.ts",
     "build": "tsc",
