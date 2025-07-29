@@ -8,7 +8,7 @@ export const createProduct = async (req: Request, res: Response) => {
     const product = await Product.create(req.body);
     res.status(201).json({ data: product });
   } catch (error) {
-    // Mensaje corregido
+    
     console.log(colors.white.bgRed.bold("Hubo un error al crear producto"));
   }
 };
@@ -20,7 +20,7 @@ export const getProducts = async (req: Request, res: Response) => {
     });
     res.json({ data: product });
   } catch (error) {
-    // Mensaje corregido
+   
     console.log(colors.white.bgRed.bold("Hubo un error al obtener producto"));
   }
 };
@@ -36,7 +36,7 @@ export const getProductId = async (req: Request, res: Response) => {
 
     res.json({ data: product });
   } catch (error) {
-    // Mensaje corregido
+    
     console.log(colors.white.bgRed.bold("Hubo un error al obtener producto por id"));
   }
 };
@@ -67,7 +67,7 @@ export const updateAvailability = async (req: Request, res: Response) => {
 
     res.json({ data: product });
   } catch (error) {
-    // Mensaje corregido
+    
     console.log(colors.white.bgRed.bold("Hubo un error al editar el campo availability"));
   }
 };
