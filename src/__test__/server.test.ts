@@ -26,8 +26,11 @@ describe('conexion to database',()=>{
     it('shiould handle databse conection error', async()=>{
         jest.spyOn(db,'authenticate')
         .mockRejectedValueOnce(new Error("hubo un error"))
+
         const consoleSpy = jest.spyOn(console,'log')
         await connectionDB()
+
+        
         expect(consoleSpy).toHaveBeenCalledWith(
             expect.stringContaining("hubo un error")
         )

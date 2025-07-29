@@ -1,47 +1,59 @@
-
 import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const sequelize = new Sequelize(process.env.DB_URL!, {
-  logging: false, // true si quiero ver e debug
-  dialect: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  },
-});
+async function clearDatabase() {
+  if (process.argv.includes('--clear')) {
+    const sequelize = new Sequelize(process.env.DB_URL!, {
+      dialect: 'postgres',
+      protocol: 'postgres',
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false
+        }
+      },
+      logging: console.log
+    });
 
-const clearDatabase = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('conexion con la base de datos');
+    try {
+      console.log('Verificando conexión a la base de datos...');
+      await sequelize.authenticate();
+      console.log('Conexión establecida correctamente.');
 
-    // Obtener todas las tablas
-    const queryInterface = sequelize.getQueryInterface();
-    await queryInterface.dropAllTables();
+      // Se obtiene todas las tablas
+      const [results] = await sequelize.query(`
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'public'
+        AND table_type = 'BASE TABLE';
+      `);
 
-    console.log('todas las tabllas fueron eliminadas corectamente');
-    await sequelize.close();
-  } catch (error) {
-    console.error('erro al limpiar la base de datos', error);
-    process.exit(1);
+      const tables = (results as { table_name: string }[]).map(r => r.table_name);
+      console.log('Tablas encontradas:', tables);
+
+      // Limpiar las tablas en lugar de eliminarlas
+      for (const table of tables) {
+        try {
+          console.log(`Limpiando tabla: ${table}`);
+          await sequelize.query(`TRUNCATE TABLE "${table}" RESTART IDENTITY CASCADE;`);
+        } catch (error) {
+          console.error(`Error al limpiar tabla ${table}:`, error);
+        }
+      }
+
+      console.log('Base de datos limpiada correctamente');
+    } catch (error) {
+      console.error('Error general al limpiar la base de datos:', error);
+    } finally {
+      await sequelize.close();
+      process.exit(0);
+    }
   }
-};
+}
 
-const run = async () => {
-  const arg = process.argv[2];
+clearDatabase();
 
-  if (arg === '--clear') {
-    await clearDatabase();
-  } else {
-    console.log('no se hizo nada');
-  }
-};
-
-run();
 
 //npm run test:coverage 

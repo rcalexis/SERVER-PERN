@@ -1,6 +1,8 @@
 import request from 'supertest';
 import server from '../../server';
 import db from '../../config/db';
+import { createProduct, getProductId, getProducts, updateAvailability } from '../product';
+import Product from '../../models/Producto.mo';
 // import db from '../../config/db';
 
 // beforeAll(async () => {
@@ -9,6 +11,7 @@ import db from '../../config/db';
 
 afterAll(async () => {
   await db.close();
+  
 });
 
 describe('POST /api/products', () => {
@@ -36,20 +39,20 @@ describe('POST /api/products', () => {
 
   it('Debe crear el producto si los datos son validos', async () => {
     const res = await request(server).post('/api/products').send({
-      name: 'iphone',
+      name: 'Balon',
       price: 400,
-      availibility: true,
+      availability: true,
     });
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(201);
     expect(res.body.data).toBeDefined();
-    expect(res.body.data.name).toBe('iphone');
-  });
+    expect(res.body.data.name).toBe('Balon');
+  })
 
   it('No debe devolver 404 en circunstancias esperadas', async () => {
     const res = await request(server).post('/api/products').send({
       name: 'pantalon',
       price: 100,
-      availibility: true,
+      availability: true,
     });
     expect(res.status).not.toBe(404);
   });
@@ -93,7 +96,7 @@ describe('GET /api/products/:id', () => {
     const nuevo = await request(server).post('/api/products').send({
       name: 'camiseta',
       price: 100,
-      availibility: true,
+      availability: true,
     });
     const id = nuevo.body.data.id;
 
@@ -114,7 +117,7 @@ describe('PUT /api/products/:id', () => {
     const res = await request(server).put('/api/products/9999').send({
       name: 'balon oro',
       price: 10,
-      availibility: true,
+      availability: true,
     });
     expect(res.status).toBe(404);
   });
@@ -123,7 +126,7 @@ describe('PUT /api/products/:id', () => {
     const nuevo = await request(server).post('/api/products').send({
       name: 'tablet',
       price: 300,
-      availibility: true,
+      availability: true,
     });
 
     const id = nuevo.body.data.id;
@@ -131,7 +134,7 @@ describe('PUT /api/products/:id', () => {
     const res = await request(server).put(`/api/products/${id}`).send({
       name: 'tablet',
       price: 0,
-      availibility: true,
+      availability: true,
     });
 
     expect(res.status).toBe(400);
@@ -141,7 +144,7 @@ describe('PUT /api/products/:id', () => {
     const nuevo = await request(server).post('/api/products').send({
       name: 'jarra',
       price: 159,
-      availibility: true,
+      availability: true,
     });
 
     const id = nuevo.body.data.id;
@@ -149,7 +152,7 @@ describe('PUT /api/products/:id', () => {
     const res = await request(server).put(`/api/products/${id}`).send({
       name: 'jarra',
       price: 200,
-      availibility: false,
+      availability: false,
     });
 
     expect(res.status).toBe(200);
@@ -168,21 +171,21 @@ describe('PATCH /api/products/:id', () => {
     const nuevo = await request(server).post('/api/products').send({
       name: 'Gorra',
       price: 300,
-      availibility: true,
+      availability: true,
     });
 
     const id = nuevo.body.data.id;
 
     const res = await request(server).patch(`/api/products/${id}`);
     expect(res.status).toBe(200);
-    expect(res.body.data.availibility).toBe(false);
+    expect(res.body.data.availability).toBe(false);
   });
 
   it('Debe alternar availability correctamente true -> false -> true', async () => {
     const nuevo = await request(server).post('/api/products').send({
       name: 'Zapatos',
       price: 500,
-      availibility: true,
+      availability: true,
     });
 
     const id = nuevo.body.data.id;
@@ -190,8 +193,8 @@ describe('PATCH /api/products/:id', () => {
     const res1 = await request(server).patch(`/api/products/${id}`);
     const res2 = await request(server).patch(`/api/products/${id}`);
 
-    expect(res1.body.data.availibility).toBe(false);
-    expect(res2.body.data.availibility).toBe(true);
+    expect(res1.body.data.availability).toBe(false);
+    expect(res2.body.data.availability).toBe(true);
   });
 });
 
@@ -210,7 +213,7 @@ describe('DELETE /api/products/:id', () => {
     const nuevo = await request(server).post('/api/products').send({
       name: 'balon',
       price: 50,
-      availibility: true,
+      availability: true,
     });
 
     const id = nuevo.body.data.id;
@@ -220,3 +223,66 @@ describe('DELETE /api/products/:id', () => {
     expect(res.body.message).toBeDefined();
   });
 });
+
+
+describe('error products',()=>{
+  it('should error create product ', async () =>{
+    jest.spyOn(Product,'create')
+    .mockRejectedValueOnce(new Error("Hubo un error al crear producto"))
+
+    //Guardamos el resultado de la consola
+    const consoleSpy = jest.spyOn(console,'log')
+    await createProduct(Request, Response)
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Hubo un error al crear producto")
+    )
+
+  })
+});
+
+describe('error products',()=>{
+  it('should error get products ', async () =>{
+    jest.spyOn(Product,'findAll')
+    .mockRejectedValueOnce(new Error("Hubo un error al obtener producto"))
+
+    //Guardamos el resultado de la consola
+    const consoleSpy = jest.spyOn(console,'log')
+    await getProducts(Request, Response)
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Hubo un error al obtener producto")
+    )
+  })
+});
+
+describe('error products',()=>{
+  it('should error get products with id ', async () =>{
+    jest.spyOn(Product,'findByPk')
+    .mockRejectedValueOnce(new Error("Hubo un error al obtener producto por id"))
+
+    //Guardamos el resultado de la consola
+    const consoleSpy = jest.spyOn(console,'log')
+    await getProductId(Request, Response)
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Hubo un error al obtener producto por id")
+    )
+  })
+});
+
+describe('error products',()=>{
+  it('should error update availability ', async () =>{
+    jest.spyOn(Product,'findByPk')
+    .mockRejectedValueOnce(new Error("Hubo un error al editar el campo availability"))
+
+    //Guardamos el resultado de la consola
+    const consoleSpy = jest.spyOn(console,'log')
+    await updateAvailability(Request, Response)
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Hubo un error al editar el campo availability")
+    )
+  })
+});
+
