@@ -1,5 +1,5 @@
 TN:
-SF:src\router.ts
+SF:src/router.ts
 FN:38,(anonymous_0)
 FN:57,(anonymous_1)
 FNF:2
@@ -29,7 +29,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\server.ts
+SF:src/server.ts
 FN:9,connectionDB
 FNF:1
 FNH:1
@@ -58,7 +58,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\config\db.ts
+SF:src/config/db.ts
 FNF:0
 FNH:0
 DA:1,2
@@ -72,7 +72,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\handlers\product.ts
+SF:src/handlers/product.ts
 FN:6,(anonymous_1)
 FN:16,(anonymous_2)
 FN:28,(anonymous_3)
@@ -146,7 +146,7 @@ BRF:8
 BRH:8
 end_of_record
 TN:
-SF:src\middleware\delete.ts
+SF:src/middleware/delete.ts
 FNF:0
 FNH:0
 DA:1,2
@@ -157,7 +157,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\middleware\index.ts
+SF:src/middleware/index.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -177,7 +177,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:src\middleware\methods.ts
+SF:src/middleware/methods.ts
 FN:4,methods
 FNF:1
 FNH:1
@@ -192,7 +192,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\models\Producto.mo.ts
+SF:src/models/Producto.mo.ts
 FNF:0
 FNH:0
 DA:1,3

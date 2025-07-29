@@ -4,6 +4,9 @@ import db from "./config/db";
 import  colors  from "colors";
 import { methods } from "./middleware/methods";
 
+import swaggerUi from 'swagger-ui-express'
+
+import swaggerSpect,{swaggerUiOptions} from "./config/swagger";
 
 
 export async function connectionDB() {
@@ -33,6 +36,8 @@ server.use(express.json())
 server.use(methods);
 
 server.use('/api/products',router);
+
+server.use('/docs', swaggerUi.serve,swaggerUi.setup(swaggerSpect,swaggerUiOptions))
 
 export default server
 
