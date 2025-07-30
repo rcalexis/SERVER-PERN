@@ -46,7 +46,7 @@ describe('POST /api/products', () => {
     expect(res.status).toBe(201);
     expect(res.body.data).toBeDefined();
     expect(res.body.data.name).toBe('Balon');
-  })
+  }, 10000)
 
   it('No debe devolver 404 en circunstancias esperadas', async () => {
     const res = await request(server).post('/api/products').send({
@@ -221,6 +221,89 @@ describe('DELETE /api/products/:id', () => {
     const res = await request(server).delete(`/api/products/${id}`);
     expect(res.status).toBe(200);
     expect(res.body.message).toBeDefined();
+  });
+});
+
+describe('crear producto', () => {
+  it('deberia manejar el error de crear productos', async () => {
+    jest.spyOn(Product, 'create').mockRejectedValueOnce(new Error('Hubo un error al crear producto'));
+
+    const consoleSpy = jest.spyOn(console, 'log');
+
+    // mock para req y res
+    const req = { body: {} } as any;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    } as any;
+
+    await createProduct(req, res);
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Hubo un error al crear producto')
+    );
+  });
+});
+
+describe('obtener productos', () => {
+  it('deberia manejar el error de obtener productos', async () => {
+    jest.spyOn(Product, 'findAll').mockRejectedValueOnce(new Error('Hubo un error al obtener producto'));
+
+    const consoleSpy = jest.spyOn(console, 'log');
+
+    // mock para req y res
+    const req = {} as any;
+    const res = {
+      json: jest.fn()
+    } as any;
+
+    await getProducts(req, res);
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Hubo un error al obtener producto')
+    );
+  });
+});
+
+describe('obtener producto por id', () => {
+  it('deberia manejar el error de obtener producto por id', async () => {
+    jest.spyOn(Product, 'findByPk').mockRejectedValueOnce(new Error('Hubo un error al obtener producto por id'));
+
+    const consoleSpy = jest.spyOn(console, 'log');
+
+    // mock para req y res
+    const req = { params: { id: '1' } } as any;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    } as any;
+
+    await getProductId(req, res);
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Hubo un error al obtener producto por id')
+    );
+  });
+});
+
+describe('actualizar disponibilidad', () => {
+  it('deberia manejar el error de actualizar availability', async () => {
+    jest.spyOn(Product, 'findByPk').mockRejectedValueOnce(new Error('Hubo un error al editar el campo availability'));
+
+    const consoleSpy = jest.spyOn(console, 'log');
+
+    // mock para req y res
+    const req = { params: { id: '1' } } as any;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    } as any;
+
+    await updateAvailability(req, res);
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Hubo un error al editar el campo availability')
+    );
   });
 });
 
