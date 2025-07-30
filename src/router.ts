@@ -45,25 +45,29 @@ const router = Router();
  * @swagger
  * components:
  *      schemas:
- *          Product:
+ *          Usuarios:
  *              type: object
  *              properties:
  *                  id:
  *                      type: integer
- *                      description: The Product ID
+ *                      description: El Id del usuario
  *                      example: 1
- *                  name:
+ *                  username:
  *                      type: string
- *                      description: The Product name
- *                      example: Monitor Curvo de 49 Pulgadas
- *                  price:
- *                      type: number
- *                      description: The Product price
- *                      example: 300
- *                  availability:
- *                      type: boolean
- *                      description: The Product availability
- *                      example: true
+ *                      description: El nombre del usuario
+ *                      example: Alexis Rodriguez
+ *                  email:
+ *                      type: string
+ *                      description: El email del usuario
+ *                      example: rcaalexis@gmail.com
+ *                  password:
+ *                      type: string
+ *                      description: La contraseña del usuario
+ *                      example: alexis1234567
+ *                  role:
+ *                      type: string
+ *                      description: El rol del usuario 
+ *                      example: Admin
  */
 router.use(methods);
 

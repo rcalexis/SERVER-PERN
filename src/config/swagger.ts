@@ -7,16 +7,22 @@ import { SwaggerUiOptions } from "swagger-ui-express"
 const options : swaggerJSDoc.Options={
 
     swaggerDefinition:{
-        openapi:'3.0.2,',
+        openapi:'3.0.2',
         tags :[
             {
             name:'products',
             description:'Operaciones de API PERN con productos'
+            },
+            {
+            name:'Usuarios',
+            description:'Operaciones de API PERN con Usuarios'
+
             }
+
         ],
 
         info:{
-            title:'REST API Node.js / Expres / Typescript',
+            title:'REST API Node.js / Express / Typescript',
             version:"1.0.0",
             description: "API Documentacion para productos"
         }
