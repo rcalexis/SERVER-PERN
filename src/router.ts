@@ -73,6 +73,34 @@ router.use(methods);
 
 router.get("/", getProducts);
 
+/**
+ * 
+ * @swagger
+ * /api/products:
+ *    get:
+ *        summary: Obtener una lista de los prdouctos 
+ *        tags:
+ *            - products
+ *        description: regresa una lista de productos
+ *        responses:
+ *            200:
+ *                description: Respuesta exitosa :)
+ *                content: 
+ *                    application/json:
+ *                        schema:
+ *                            type: array
+ *                            items:
+ *                                $ref: '#/components/schemas/product'
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
 router.get(
   "/:id",
   param("id").isNumeric().withMessage("El id debe ser numerico"),
