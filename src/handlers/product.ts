@@ -13,6 +13,8 @@ export const createProduct = async (req: Request, res: Response) => {
   }
 };
 
+
+
 export const getProducts = async (req: Request, res: Response) => {
   try {
     const product = await Product.findAll({
@@ -67,7 +69,6 @@ export const updateAvailability = async (req: Request, res: Response) => {
 
     res.json({ data: product });
   } catch (error) {
-    
     console.log(colors.white.bgRed.bold("Hubo un error al editar el campo availability"));
   }
 };

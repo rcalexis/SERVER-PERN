@@ -35,7 +35,7 @@ const server = express()
 server.use(express.json())
 server.use(methods);
 
-server.use('/api/products',router);
+server.use('/api', router);
 
 server.use('/docs', swaggerUi.serve,swaggerUi.setup(swaggerSpect,swaggerUiOptions))
 

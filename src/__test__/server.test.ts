@@ -12,18 +12,15 @@ jest.mock('../config/db');
 //         // console.log(res);
 //         expect(res.status).toBe(200)
 //         expect(res.header['content-type']).toMatch(/json/)
-
-        
 //         //contrareas 
 //         expect(res.status).not.toBe(400)
-        
 //     });
     
     
 // });
 
 describe('conexion to database',()=>{
-    it('shiould handle databse conection error', async()=>{
+    it('should handle databse conection error', async()=>{
         jest.spyOn(db,'authenticate')
         .mockRejectedValueOnce(new Error("hubo un error"))
 

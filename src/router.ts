@@ -11,6 +11,7 @@ import { handleInputErrors } from "./middleware";
 import { body, param } from "express-validator";
 import { methods } from "./middleware/methods";
 import { eliminar } from "./middleware/delete";
+import { createUser, deleteUser, getUserId, getUsers, updateUser } from "./handlers/user";
 
 const router = Router();
 
@@ -71,7 +72,7 @@ const router = Router();
  */
 router.use(methods);
 
-router.get("/", getProducts);
+
 
 /**
  * 
@@ -100,16 +101,17 @@ router.get("/", getProducts);
  * 
  * 
  */
+router.get("/products", getProducts);
 
 router.get(
-  "/:id",
+  "/products/:id",
   param("id").isNumeric().withMessage("El id debe ser numerico"),
   handleInputErrors,
   getProductId
 );
 
 router.post(
-  "/",
+  "/products",
   body("name").notEmpty().withMessage("El nombre es un campo requerido"),
 
   body("price")
@@ -126,7 +128,7 @@ router.post(
 );
 
 router.put(
-  "/:id",
+  "/products/:id",
   param("id").isNumeric().withMessage("El id debe ser numerico"),
 
   body("name").notEmpty().withMessage("El nombre es un campo requerido"),
@@ -149,18 +151,75 @@ router.put(
 );
 
 router.patch(
-  "/:id",
+  "/products/:id",
   param("id").isNumeric().withMessage("El id debe ser numerico"),
   handleInputErrors,
   updateAvailability
 );
 
 router.delete(
-  "/:id",
-  param("id").isNumeric().withMessage("El id debe ser numérico"),
+  "/products/:id",
+  param("id").isNumeric().withMessage("El id debe ser numerico"),
   handleInputErrors,
   eliminar,
   deleteProduct
 );
+
+
+
+////////////////////////////////////////////////////
+
+//Usuarios:
+router.get("/users", getUsers);
+
+router.get(
+  "/users/:id",
+  param("id").isNumeric().withMessage("tonto el id debe ser numerico"),
+  handleInputErrors,
+  getUserId
+);
+
+router.post(
+  "/users",
+  body("username").notEmpty().withMessage("el nombre es requerido"),
+  body("password").notEmpty().withMessage("la contraseña es requerida"),
+  body("email")
+    .notEmpty()
+    .withMessage("tonto te falto el correo")
+    .isEmail()
+    .withMessage("ingrese un correo valido"),
+  body("role")
+    .optional()
+    .isIn(["user", "admin"])
+    .withMessage("El rol debe ser 'user' o 'admin'"),
+  handleInputErrors,
+  createUser
+);
+
+router.put(
+  "/users/:id",
+  param("id").isNumeric().withMessage("el id debe ser numerico"),
+  body("username")
+    .optional()
+    .notEmpty()
+    .withMessage("tonto te falto el nombre"),
+  body("email")
+    .optional()
+    .notEmpty()
+    .withMessage("tonto te falto el correo")
+    .isEmail()
+    .withMessage("tonto ingresa una correo valido"),
+  handleInputErrors,
+  updateUser
+);
+
+
+router.delete(
+  "/users/:id",
+  param("id").isNumeric().withMessage("tontoo el id tiene que se numerico"),
+  handleInputErrors,
+  deleteUser
+);
+
 
 export default router;

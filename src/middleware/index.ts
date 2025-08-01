@@ -6,7 +6,7 @@ export const handleInputErrors = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("Entro al middleware");
+  // console.log("Entro al middleware");
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
