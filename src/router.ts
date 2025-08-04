@@ -41,6 +41,7 @@ const router = Router();
  */
 
 
+
 //hacerlo pero con el de usuarios
 /**
  * @swagger
@@ -70,6 +71,10 @@ const router = Router();
  *                      description: El rol del usuario 
  *                      example: Admin
  */
+
+
+
+
 router.use(methods);
 
 
@@ -103,12 +108,96 @@ router.use(methods);
  */
 router.get("/products", getProducts);
 
+
+/**
+ * 
+ * @swagger
+ * /api/products/{id}:
+ *    get:
+ *        summary: Obtener una lista de los prdouctos por ID
+ *        tags:
+ *            - products
+ *        description: regresa un producto
+ *        parameters:
+ *             - in: path
+ *               name: id
+ *               description: El Id del producto a consultar
+ *               required: true
+ *               schema:
+ *                  type: integer
+ *        responses:
+ *            200:
+ *                description: Respuesta exitosa :)
+ *                content: 
+ *                    application/json:
+ *                        schema:
+ *                            type: array
+ *                            items:
+ *                                $ref: '#/components/schemas/product'
+ *            404:
+ *                description: No encontrado
+ *            400:
+ *               description: Solicitud erronea - ID invalido  
+ *            
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
 router.get(
   "/products/:id",
   param("id").isNumeric().withMessage("El id debe ser numerico"),
   handleInputErrors,
   getProductId
 );
+
+/**
+ * 
+ * @swagger
+ * /api/products:
+ *    post:
+ *      summary: crea un nuevo producto 
+ *      tags:
+ *          - products
+ *      description: Retorna un nuevo registro d¡en la base de datos 
+ *      requestBody:
+ *            requred: true
+ *            content:
+ *                application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              name:
+ *                                  type: string
+ *                                  example: "Monitor curvo"
+ *                               price:
+ *                                    type: number
+ *                                    example: 15999
+ *      
+ *      responses:
+ *          201:
+ *             descripotion: Respuesta Exitosa
+ *             content:
+ *                application/json:
+ *                     schema:
+ *                        $ref: '#/components/schemas/products'
+ *          400:
+ *             description: Mala respuesta
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 
 router.post(
   "/products",
