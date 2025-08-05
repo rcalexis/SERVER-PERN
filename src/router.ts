@@ -9,6 +9,11 @@ import {
 } from "./handlers/product";
 import { handleInputErrors } from "./middleware";
 import { body, param } from "express-validator";
+
+
+
+
+// este codigo no sirve 
 import { methods } from "./middleware/methods";
 import { eliminar } from "./middleware/delete";
 import { createUser, deleteUser, getUserId, getUsers, updateUser } from "./handlers/user";
