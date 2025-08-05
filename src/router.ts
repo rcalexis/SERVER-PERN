@@ -41,8 +41,6 @@ const router = Router();
  */
 
 
-
-//hacerlo pero con el de usuarios
 /**
  * @swagger
  * components:
@@ -72,9 +70,6 @@ const router = Router();
  *                      example: Admin
  */
 
-
-
-
 router.use(methods);
 
 
@@ -97,13 +92,6 @@ router.use(methods);
  *                            type: array
  *                            items:
  *                                $ref: '#/components/schemas/product'
- * 
- * 
- * 
- * 
- * 
- * 
- * 
  * 
  */
 router.get("/products", getProducts);
@@ -139,14 +127,6 @@ router.get("/products", getProducts);
  *            400:
  *               description: Solicitud erronea - ID invalido  
  *            
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
  */
 
 router.get(
@@ -155,49 +135,38 @@ router.get(
   handleInputErrors,
   getProductId
 );
-
 /**
- * 
  * @swagger
  * /api/products:
- *    post:
- *      summary: crea un nuevo producto 
- *      tags:
- *          - products
- *      description: Retorna un nuevo registro d¡en la base de datos 
- *      requestBody:
- *            requred: true
- *            content:
- *                application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                              name:
- *                                  type: string
- *                                  example: "Monitor curvo"
- *                               price:
- *                                    type: number
- *                                    example: 15999
- *      
- *      responses:
- *          201:
- *             descripotion: Respuesta Exitosa
- *             content:
- *                application/json:
- *                     schema:
- *                        $ref: '#/components/schemas/products'
- *          400:
- *             description: Mala respuesta
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
+ *   post:
+ *     summary: Crea un nuevo producto 
+ *     tags:
+ *       - products
+ *     description: Retorna un nuevo registro en la base de datos 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Monitor curvo"
+ *               price:
+ *                 type: number
+ *                 example: 159
+ *     responses:
+ *       201:
+ *         description: Respuesta Exitosa
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/product'
+ *       400:
+ *         description: Mala respuesta
  */
+
 
 router.post(
   "/products",
@@ -259,8 +228,52 @@ router.delete(
 ////////////////////////////////////////////////////
 
 //Usuarios:
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Obtener todos los usuarios
+ *     tags:
+ *       - users
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Usuarios'
+ */
+
 router.get("/users", getUsers);
 
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ *     summary: Obtener un usuario por ID
+ *     tags:
+ *       - users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del usuario
+ *     responses:
+ *       200:
+ *         description: Usuario encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Usuarios'
+ *       404:
+ *         description: Usuario no encontrado
+ */
 router.get(
   "/users/:id",
   param("id").isNumeric().withMessage("tonto el id debe ser numerico"),
@@ -268,6 +281,42 @@ router.get(
   getUserId
 );
 
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Crear un nuevo usuario
+ *     tags:
+ *       - users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: "Alexis Rodriguez"
+ *               email:
+ *                 type: string
+ *                 example: "rcaalexis@gmail.com"
+ *               password:
+ *                 type: string
+ *                 example: "alexis1234567"
+ *               role:
+ *                 type: string
+ *                 example: "user"
+ *     responses:
+ *       201:
+ *         description: Usuario creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Usuarios'
+ *       400:
+ *         description: Datos inválidos
+ */
 router.post(
   "/users",
   body("username").notEmpty().withMessage("el nombre es requerido"),
