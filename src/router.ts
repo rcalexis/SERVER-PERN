@@ -190,6 +190,48 @@ router.post(
   createProduct
 );
 
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   put:
+ *     summary: Actualiza un producto 
+ *     tags:
+ *       - products
+ *     description: actualiza un producto en la base de datos
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Monitor curvo actualizado"
+ *               price:
+ *                 type: number
+ *                 example: 199
+ *     responses:
+ *       200:
+ *         description: Producto actualizado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/product'
+ *       400:
+ *         description: Solicitud incorrecta
+ *       404:
+ *         description: Producto no encontrado
+ */
+
+
 router.put(
   "/products/:id",
   param("id").isNumeric().withMessage("El id debe ser numerico"),
@@ -204,10 +246,6 @@ router.put(
     .toFloat()
     .custom((value) => value > 0)
     .withMessage("El precio debe ser mayor a 0"),
-
-  body("availability")
-    .isBoolean()
-    .withMessage("La disponibilidad debe ser booleana"),
 
   handleInputErrors,
   updateProduct
